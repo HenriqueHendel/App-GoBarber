@@ -7,6 +7,8 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
+import api from '../../services/api';
+
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -40,6 +42,12 @@ const SignUp: React.FC = ()=>{
             await schema.validate(data, {
                 abortEarly: false
             })
+
+            api.post("/users", data);
+
+            Alert.alert("Cadastro realizado","Seu cadastro foi realizado com sucesso, agora você já pode fazer o seu login");
+
+            navigation.navigate("SignIn");
         }catch(err){
             if(err instanceof Yup.ValidationError){
                 const errors = getValidationErrors(err);
@@ -66,7 +74,7 @@ const SignUp: React.FC = ()=>{
                         <Form ref={formRef} onSubmit={handleSignUp} >
                             <Input autoCapitalize="words" name="name" icon="user" placeholder="Nome" returnKeyType="next" onSubmitEditing={()=>{emailInputRef.current?.focus()}} />
                             <Input ref={emailInputRef} keyboardType="email-address" autoCorrect={false} autoCapitalize="none" name="email" icon="mail" placeholder="Email" returnKeyType="next" onSubmitEditing={()=>{passwordInputRef.current?.focus()}} />
-                            <Input ref={passwordInputRef} secureTextEntry name="password" icon="lock" placeholder="Senha" textContentType="newPassword" returnKeyType="send" onSubmitEditing={()=>{formRef.current?.submitForm()}} />
+                            <Input ref={passwordInputRef} secureTextEntry autoCorrect={false} autoCapitalize="none" name="password" icon="lock" placeholder="Senha" textContentType="newPassword" returnKeyType="send" onSubmitEditing={()=>{formRef.current?.submitForm()}} />
 
                         </Form>
                         <Button onPress={()=>{formRef.current?.submitForm()}}>Cadastrar</Button>
