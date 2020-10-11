@@ -4,6 +4,7 @@ import { IconProps } from 'react-native-vector-icons/Icon';
 
 interface ContainerProps {
     isFocused: boolean;
+    isErrored: boolean;
 }
 
 
@@ -14,9 +15,14 @@ export const Container = styled.View<ContainerProps>`
     background: #232129;
     border-radius: 10px;
     margin-bottom:8px;
+    border-width: 1px;
+    border-color: #232129;
+
+    ${props => props.isErrored && css`
+        border-color: #c53030;
+    `}
 
     ${props=> props.isFocused && css`
-        border-width: 1px;
         border-color: #ff9000;
     `}
 
