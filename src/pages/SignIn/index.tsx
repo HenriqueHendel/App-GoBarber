@@ -6,6 +6,7 @@ import {Form} from '@unform/mobile';
 import {FormHandles} from '@unform/core';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
+import {useAuth} from '../../hooks/auth';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -26,6 +27,10 @@ const SignIn: React.FC = ()=>{
 
     const passwordInputRef = useRef<TextInput>(null);
 
+    const {signIn, user} = useAuth();
+
+    console.log(user);
+
     const handleSignIn = useCallback(async (data:SignInProps)=>{
         try {
             formRef.current?.setErrors({});
@@ -37,6 +42,8 @@ const SignIn: React.FC = ()=>{
             await schema.validate(data, {
                 abortEarly: false
             })
+
+            await signIn({email:data.email, password:data.password});
         }catch(err){
             if(err instanceof Yup.ValidationError){
                 const errors = getValidationErrors(err);
@@ -48,7 +55,7 @@ const SignIn: React.FC = ()=>{
 
             Alert.alert("Erro na autenticação","Ocorreu um erro ao fazer o login. Cheque as credencias")
         }
-    }, []);
+    }, [signIn]);
 
     return(
         <>
@@ -63,7 +70,7 @@ const SignIn: React.FC = ()=>{
 
                         <Form ref={formRef} onSubmit={handleSignIn}>
                             <Input name="email" icon="mail" placeholder="Email" autoCorrect={false} autoCapitalize="none" keyboardType="email-address" returnKeyType="next" onSubmitEditing={()=>{passwordInputRef.current?.focus()}} />
-                            <Input ref={passwordInputRef} name="password" icon="lock" placeholder="Senha" secureTextEntry returnKeyType="send" onSubmitEditing={()=>{formRef.current?.submitForm()}} />
+                            <Input ref={passwordInputRef} name="password" icon="lock" placeholder="Senha" autoCorrect={false} autoCapitalize="none" secureTextEntry returnKeyType="send" onSubmitEditing={()=>{formRef.current?.submitForm()}} />
                         </Form>
                         <Button onPress={()=>{formRef.current?.submitForm()}}>Entrar</Button>
 

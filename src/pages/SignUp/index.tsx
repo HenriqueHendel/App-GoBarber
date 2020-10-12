@@ -37,13 +37,13 @@ const SignUp: React.FC = ()=>{
             name: Yup.string().required("Nome é obrigatório"),
             email: Yup.string().required("Email é obrigatório").email("Digite um email válido"),
             password: Yup.string().min(6, "Mínimos de 6 dígitos")
-            })
+            });
 
             await schema.validate(data, {
                 abortEarly: false
-            })
+            });
 
-            api.post("/users", data);
+            await api.post("/users", data);
 
             Alert.alert("Cadastro realizado","Seu cadastro foi realizado com sucesso, agora você já pode fazer o seu login");
 
@@ -56,8 +56,7 @@ const SignUp: React.FC = ()=>{
 
                 return;
             }
-
-            Alert.alert("Erro no cadastro", "Ocorreu um erro ao faazer o cadastro, tente novamente");
+            Alert.alert("Erro no cadastro", "Ocorreu um erro ao fazer o cadastro, tente novamente");
         }
     }, [])
 
